@@ -1,0 +1,6 @@
+.venv/
+db/data/
+.env
+__pycache__/
+.idea/
+*.log

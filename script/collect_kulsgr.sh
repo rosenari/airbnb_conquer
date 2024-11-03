@@ -1,0 +1,2 @@
+source .venv/bin/activate
+python main.py --request '{"country": "말레이시아", "sido": "쿠알라룸프르", "ne_lat": "3.2440386736749045", "ne_lng": "101.75863265991211", "sw_lat": "3.036051568491476", "sw_lng": "101.6149628162384"}'
