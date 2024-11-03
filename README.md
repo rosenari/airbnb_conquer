@@ -19,7 +19,10 @@ CHROME_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 ./script/collect_deajeon.sh
 ```
 
-### 다른 지역 수집
+
+<hr>
+
+### 다른 지역 수집 시
 - 다른 지역 수집시 스크립트를 활용하여 바운드 박스를 추출하고 샘플 스크립트 참고하여 크롤러를 실행하세요.
 
 #### 대한민국 지역별 바운딩 박스 추출
