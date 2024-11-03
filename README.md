@@ -30,10 +30,10 @@ python ./script/get_bounding_box.py
 
 #### 수집된 데이터를 기반으로 엑셀 파일 생성
 ```bash
-python ./script/get_bounding_box.py
+python ./script/create_excel.py
 ```
 
 #### 엑셀 파일을 기반으로 맵 파일 생성
 ```bash
-python ./script/get_bounding_box.py
+python ./script/create_marker_map.py
 ```
