@@ -19,17 +19,6 @@ CHROME_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 ./script/collect_deajeon.sh
 ```
 
-
-<hr>
-
-### 다른 지역 수집 시
-- 다른 지역 수집시 스크립트를 활용하여 바운드 박스를 추출하고 샘플 스크립트 참고하여 크롤러를 실행하세요.
-
-#### 샘플 스크립트 
-> ./script/collect_deajeon.sh <br>
-> ./script/collect_kulsgr.sh <br>
-> ./script/collect_sbhcon.sh <br>
-
 <hr> 
 
 ### 스크립트 목록
