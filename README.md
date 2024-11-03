@@ -1,2 +1,33 @@
 ### 에어비앤비 데이터 수집
 
+#### database 기동
+```bash
+./start_db_server.sh
+```
+
+#### chrome 경로 환경에 맞게 변경
+```python
+# app/constant.py
+...
+CHROME_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+...
+```
+
+#### 데이터 수집 실행
+- 대전시 수집 샘플 스크립트
+```
+./script/collect_deajeon.sh
+```
+
+### 다른 지역 수집
+- 다른 지역 수집시 스크립트를 활용하여 바운드 박스를 추출하고 샘플 스크립트 참고하여 크롤러를 실행하세요.
+
+#### 대한민국 지역별 바운딩 박스 추출
+```bash
+python ./script/get_bounding_box.py
+```
+
+#### 샘플 스크립트 
+> ./script/collect_deajeon.sh <br>
+> ./script/collect_kulsgr.sh <br>
+> ./script/collect_sbhcon.sh <br>
