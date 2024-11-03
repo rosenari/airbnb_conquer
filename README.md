@@ -25,12 +25,24 @@ CHROME_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 ### 다른 지역 수집 시
 - 다른 지역 수집시 스크립트를 활용하여 바운드 박스를 추출하고 샘플 스크립트 참고하여 크롤러를 실행하세요.
 
-#### 대한민국 지역별 바운딩 박스 추출
-```bash
-python ./script/get_bounding_box.py
-```
-
 #### 샘플 스크립트 
 > ./script/collect_deajeon.sh <br>
 > ./script/collect_kulsgr.sh <br>
 > ./script/collect_sbhcon.sh <br>
+
+### 스크립트 목록
+
+#### 지역별 바운딩 박스 추출
+```bash
+python ./script/get_bounding_box.py
+```
+
+#### 수집된 데이터를 기반으로 엑셀 파일 생성
+```bash
+python ./script/get_bounding_box.py
+```
+
+#### 엑셀 파일을 기반으로 맵 파일 생성
+```bash
+python ./script/get_bounding_box.py
+```
