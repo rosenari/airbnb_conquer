@@ -30,6 +30,8 @@ CHROME_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 > ./script/collect_kulsgr.sh <br>
 > ./script/collect_sbhcon.sh <br>
 
+<hr> 
+
 ### 스크립트 목록
 
 #### 지역별 바운딩 박스 추출
