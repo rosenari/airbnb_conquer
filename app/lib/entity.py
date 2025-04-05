@@ -13,6 +13,7 @@ class Listing(Base):
     title = Column(String(255))
     rating = Column(Float)
     review_count = Column(Integer)
+    foreigner_review_count = Column(Integer)
     option_list = Column(Text, nullable=True)
     reserved_count = Column(Integer)
 
@@ -30,6 +31,7 @@ class Listing(Base):
             "title": self.title,
             "rating": self.rating,
             "review_count": self.review_count,
+            "foreigner_review_count": self.foreigner_review_count,
             "option_list": self.option_list,
             "reserved_count": self.reserved_count
         }

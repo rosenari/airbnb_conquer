@@ -52,7 +52,8 @@ async def _request_listing_info_to_airbnb(page: Page, request: ListingRequest) -
     https://www.airbnb.co.kr/rooms/1006263284659826158
     """
     try:
-        url = f"https://www.airbnb.co.kr/rooms/{request.id}"
+        params = 'translate_ugc=false'  # 원문 요청
+        url = f"https://www.airbnb.co.kr/rooms/{request.id}?{params}"
 
         await page.goto(
             url
