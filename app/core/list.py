@@ -195,6 +195,7 @@ async def collect_listing_detail(session, page, listing_list, sido: str):
                            title=listing_info.title,
                            rating=listing_info.rating,
                            review_count=listing_info.review_count,
+                           foreigner_review_count=listing_info.foreigner_review_count,
                            option_list=listing_info.option_list,
                            reserved_count=listing_info.reserved_count)
         logger.info(f"숙소 ID {listing.id} 수집 완료")
@@ -428,7 +429,8 @@ def extract_listing_data(search_result: Dict) -> ListingId | None:
 
 
 # repository logic
-async def save_listing(session, id: str, sido: str, coordinate: str, title: str, rating: float, review_count: int, option_list: List, reserved_count: int):
+async def save_listing(session, id: str, sido: str, coordinate: str, title: str, rating: float, review_count: int,
+                       foreigner_review_count: int, option_list: List, reserved_count: int):
     logger.info('숙소 정보를 저장합니다.')
     try:
         if session.in_transaction() is False:
@@ -442,6 +444,7 @@ async def save_listing(session, id: str, sido: str, coordinate: str, title: str,
             title=title,
             rating=rating,
             review_count=review_count,
+            foreigner_review_count=foreigner_review_count,
             option_list=str(option_list),
             reserved_count=reserved_count
         )
