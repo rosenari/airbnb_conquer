@@ -51,4 +51,5 @@ class Listing:
     review_count: int
     option_list: List
     reserved_count: int = 0
+    foreigner_review_count: int = 0
     collect_date: str = field(default_factory=generate_now_date_to_string)

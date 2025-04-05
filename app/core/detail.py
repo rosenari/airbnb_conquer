@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from app.logger import get_logger
 from playwright.async_api import Page
 import re
+import time
 
 # util module
 from app.util import to_date, add_days
@@ -28,6 +29,12 @@ async def fetch_listing_info(page: Page, request: ListingRequest) -> Listing | N
         html = await _request_listing_info_to_airbnb(page, request)
         base_date = request.base_date  # 추출 기준 일자 (해당 날짜부터 30일치 추출)
         listing_info_dict = _extract_listing_info(html, base_date)
+        foreigner_review_count = 0
+
+        # 외국인 댓글 개수 추출
+        if html != '':
+            review_list = await _request_all_review(page)
+            foreigner_review_count = _extract_foreigner_review_count(review_list)
 
         if listing_info_dict is not None:
             return Listing(
@@ -36,6 +43,7 @@ async def fetch_listing_info(page: Page, request: ListingRequest) -> Listing | N
                 title=listing_info_dict['title'],
                 rating=listing_info_dict['rating'],
                 review_count=listing_info_dict['review_count'],
+                foreigner_review_count=foreigner_review_count,
                 option_list=listing_info_dict['option_list'],
                 reserved_count=listing_info_dict['reserved_count']
             )
@@ -199,3 +207,77 @@ def _extract_option_list(soup: BeautifulSoup) -> List:
     except Exception as e:
         logger.error(f"숙소 옵션 리스트 추출 실패: {e}", exc_info=True)
         return []
+
+
+async def _request_all_review(page: Page) -> list[str]:
+    """
+    리뷰 모달을 띄우고, 모든 리뷰 정보를 가져옵니다.
+    """
+    try:
+        result = []
+        await page.wait_for_selector('[data-testid="pdp-show-all-reviews-button"]')
+        await page.click('[data-testid="pdp-show-all-reviews-button"]')  # 모든 리뷰 보기 버튼 클릭
+
+        await page.wait_for_selector('[data-testid="modal-container"]')
+
+        dialog_div = await page.query_selector('div[role="dialog"]')
+
+        scrollable_div = await dialog_div.query_selector('div:last-child')
+        assert scrollable_div is not None, "❌ scrollable div가 존재하지 않음!"
+
+        prev_height = 0
+
+        # 스크롤 링
+        while True:
+            # 현재 scrollHeight 측정
+            current_height = await page.evaluate('(el) => el.scrollHeight', scrollable_div)
+
+            # 스크롤 맨 아래로 이동
+            await page.evaluate('(el) => el.scrollTo(0, el.scrollHeight)', scrollable_div)
+
+            # 약간 기다려서 로딩 유도
+            time.sleep(1.5)
+
+            # scrollHeight 변화 없으면 종료
+            if current_height == prev_height:
+                print("✅ 더 이상 로딩할 리뷰 없음.")
+                break
+
+            prev_height = current_height
+
+        review_divs = await page.query_selector_all('div[data-review-id]')
+
+        for review_div in review_divs:
+            # 두 번째 자식 div 선택
+            second_child_div = await review_div.query_selector(':scope > div:nth-child(2)')
+
+            if second_child_div:
+                # 그 안의 가장 깊은 span 하나 선택 (또는 첫 번째 span)
+                span = await second_child_div.query_selector('span')
+
+                if span:
+                    text = await span.inner_text()
+                    result.append(text)
+
+        return result
+    except Exception as e:
+        logger.error(f"모든 리뷰 정보 가져오기 실패: {e}", exc_info=True)
+        return []
+
+
+def _extract_foreigner_review_count(review_list: list[str]) -> int:
+    """
+    외국인 리뷰 개수 추출
+    """
+    try:
+        korean_pattern = re.compile(r'[\uac00-\ud7a3]')  # 한글 유니코드 범위
+
+        count = 0
+        for review in review_list:
+            if not korean_pattern.search(review):  # 한글이 없으면 외국어 리뷰로 간주
+                count += 1
+
+        return count
+    except Exception as e:
+        logger.error(f"외국인 리뷰 카운트 추출 실패: {e}", exc_info=True)
+        return 0
