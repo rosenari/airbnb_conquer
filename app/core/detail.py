@@ -67,7 +67,7 @@ async def _request_listing_info_to_airbnb(page: Page, request: ListingRequest) -
             url
         )
 
-        await page.wait_for_load_state('networkidle')  # 추가적인 네트워크 요청이 없을떄 까지 대기
+        await page.wait_for_load_state('load')  # 추가적인 네트워크 요청이 없을떄 까지 대기
 
         result = await page.content()
 
@@ -215,10 +215,10 @@ async def _request_all_review(page: Page) -> list[str]:
     """
     try:
         result = []
-        await page.wait_for_selector('[data-testid="pdp-show-all-reviews-button"]')
+        await page.wait_for_selector('[data-testid="pdp-show-all-reviews-button"]', timeout=1500)
         await page.click('[data-testid="pdp-show-all-reviews-button"]')  # 모든 리뷰 보기 버튼 클릭
 
-        await page.wait_for_selector('[data-testid="modal-container"]')
+        await page.wait_for_selector('[data-testid="modal-container"]', timeout=1500)
 
         dialog_div = await page.query_selector('div[role="dialog"]')
 

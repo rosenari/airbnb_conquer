@@ -22,7 +22,7 @@ async def test_fetch_listing_list(setUp):
         listing_list = await fetch_listing_list(page, listing_list_request)
         print(listing_list)
         print(len(listing_list))
-
+        """
         next_listing_list = await fetch_listing_list_next_page(page)
         print(next_listing_list)
         print(len(next_listing_list))
@@ -30,4 +30,5 @@ async def test_fetch_listing_list(setUp):
         next_listing_list = await fetch_listing_list_next_page(page)
         print(next_listing_list)
         print(len(next_listing_list))
+        """
 

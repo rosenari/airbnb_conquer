@@ -1,6 +1,7 @@
 .venv/
 db/data/
 .env
+.env.dev
 __pycache__/
 .idea/
 *.log

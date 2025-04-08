@@ -231,7 +231,7 @@ async def fetch_listing_list_next_page(page: Page) -> List[ListingId] | None:
         async def search_page(_page: Page):
             _next_btn = await _page.query_selector("[aria-label='다음']")
             await _next_btn.click()
-            await page.wait_for_load_state('networkidle')
+            await page.wait_for_load_state('load')
 
         list_data = await get_listing_list_data(page, search_page)
 
@@ -289,7 +289,7 @@ async def request_listing_list_to_airbnb(page: Page, request: ListingListRequest
             url
         )
 
-        await page.wait_for_load_state('networkidle')
+        await page.wait_for_load_state('load')
 
         result = await page.content()
 
@@ -401,7 +401,6 @@ def extract_listing_list_from_stays_search(stays_search_data: Dict | None) -> Li
     search_results = stays_search_data.get('results', {}).get('searchResults', [])
 
     combined_results = map_results + search_results  # map_results 와 search_results 병합 (리스트)
-
     for search_result in combined_results:
         extract_data = extract_listing_data(search_result)
         if extract_data is not None:
@@ -417,14 +416,21 @@ def extract_listing_data(search_result: Dict) -> ListingId | None:
     try:
         listing = search_result['listing']
         listing_id = listing['id']
-        coordinate = listing['coordinate']
+
+        if 'coordinate' in listing:
+            coordinate = listing['coordinate']
+        elif 'demandStayListing' in search_result and 'location' in search_result['demandStayListing']\
+                and 'coordinate' in search_result['demandStayListing']['location']:
+            coordinate = search_result['demandStayListing']['location']['coordinate']
+        else:
+            raise ValueError('Not found coordinate.')
 
         return ListingId(
             id=listing_id,
             coordinate=(coordinate['latitude'], coordinate['longitude'])
         )
     except Exception as e:
-        logger.info(f"숙소 상세 정보 추출 실패했으므로 {search_result} 데이터는 추출을 스킵합니다: {e}")
+        logger.info(f"숙소 상세 정보 추출 실패했으므로 추출을 스킵합니다: {e}")
         return None
 
 
